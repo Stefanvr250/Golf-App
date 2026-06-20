@@ -30,6 +30,21 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // Admin route guard — check role for /admin/* paths
+  if (pathname.startsWith("/admin")) {
+    const { createClient } = await import("@/lib/supabase/server");
+    const supabase = createClient();
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile || profile.role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
   return supabaseResponse;
 }
 

@@ -146,7 +146,7 @@ export default function CoursesPage() {
     <div className="container space-y-6 py-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Courses</h1>
-        <Link href="/courses/new">
+        <Link href="/courses/new" prefetch={true}>
           <Button size="sm">
             <Plus className="mr-1.5 h-4 w-4" />
             Add Course
@@ -204,7 +204,7 @@ export default function CoursesPage() {
         <div className="rounded-lg border border-dashed p-8 text-center">
           <p className="text-sm text-muted-foreground">
             No courses found.{" "}
-            <Link href="/courses/new" className="font-medium text-primary hover:underline">
+            <Link href="/courses/new" className="font-medium text-primary hover:underline" prefetch={true}>
               Add one manually
             </Link>
           </p>
@@ -226,7 +226,7 @@ export default function CoursesPage() {
   );
 }
 
-function CourseCard({
+const CourseCard = React.memo(function CourseCard({
   course,
   onImport,
 }: {
@@ -256,7 +256,7 @@ function CourseCard({
 
         <div className="flex shrink-0 gap-2">
           {course.inDatabase && course.id ? (
-            <Link href={`/courses/${course.id}`}>
+            <Link href={`/courses/${course.id}`} prefetch={true}>
               <Button size="sm" variant="outline">
                 View
               </Button>
@@ -270,4 +270,4 @@ function CourseCard({
       </CardContent>
     </Card>
   );
-}
+});

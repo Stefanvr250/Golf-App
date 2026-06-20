@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
 import { HandicapHistory, type HandicapHistoryEntry } from "@/components/profile/HandicapHistory";
+import { DeleteAccountButton } from "@/components/profile/DeleteAccountButton";
 
 export default async function ProfilePage() {
   const supabase = createClient();
@@ -96,6 +97,16 @@ export default async function ProfilePage() {
       </Card>
 
       <HandicapHistory entries={hcpHistory} />
+
+      {/* Account actions */}
+      <div className="space-y-3 border-t pt-4">
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <a href="/privacy" className="hover:underline">Privacy Policy</a>
+          <span>•</span>
+          <a href="/terms" className="hover:underline">Terms of Service</a>
+        </div>
+        <DeleteAccountButton />
+      </div>
     </div>
   );
 }

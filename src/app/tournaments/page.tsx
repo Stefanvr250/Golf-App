@@ -18,6 +18,24 @@ interface TournamentItem {
   max_participants: number;
 }
 
+const TournamentItemMemo = React.memo(function TournamentItemMemo({
+  item,
+}: {
+  item: TournamentItem;
+}) {
+  return (
+    <TournamentCard
+      id={item.id}
+      name={item.name}
+      date={item.date}
+      format={item.format}
+      status={item.status}
+      courseName={item.course?.name}
+      maxParticipants={item.max_participants}
+    />
+  );
+});
+
 export default function TournamentsPage() {
   const [my, setMy] = React.useState<TournamentItem[]>([]);
   const [upcoming, setUpcoming] = React.useState<TournamentItem[]>([]);
@@ -42,7 +60,7 @@ export default function TournamentsPage() {
     <div className="container space-y-6 py-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Tournaments</h1>
-        <Link href="/tournaments/new">
+        <Link href="/tournaments/new" prefetch={true}>
           <Button size="sm">
             <Plus className="mr-2 h-4 w-4" />
             New
@@ -66,16 +84,7 @@ export default function TournamentsPage() {
             </Card>
           )}
           {my.map((t) => (
-            <TournamentCard
-              key={t.id}
-              id={t.id}
-              name={t.name}
-              date={t.date}
-              format={t.format}
-              status={t.status}
-              courseName={t.course?.name}
-              maxParticipants={t.max_participants}
-            />
+            <TournamentItemMemo key={t.id} item={t} />
           ))}
         </TabsContent>
 
@@ -89,16 +98,7 @@ export default function TournamentsPage() {
             </Card>
           )}
           {upcoming.map((t) => (
-            <TournamentCard
-              key={t.id}
-              id={t.id}
-              name={t.name}
-              date={t.date}
-              format={t.format}
-              status={t.status}
-              courseName={t.course?.name}
-              maxParticipants={t.max_participants}
-            />
+            <TournamentItemMemo key={t.id} item={t} />
           ))}
         </TabsContent>
       </Tabs>

@@ -13,6 +13,8 @@ import { CourseMap } from "@/components/maps/CourseMap";
 import { GPSTracker, TargetPoint } from "@/components/maps/GPSTracker";
 import { YardageCircles } from "@/components/maps/YardageCircles";
 import { cn } from "@/lib/utils";
+import { db } from "@/lib/offline/db";
+import { enqueueAction } from "@/lib/offline/queue";
 
 interface HoleDetailClientProps {
   roundId: string;
@@ -86,11 +88,40 @@ export function HoleDetailClient({
       router.push(`/play/${roundId}`);
       router.refresh();
     } catch (err) {
-      toast({
-        variant: "destructive",
-        title: "Save failed",
-        description: err instanceof Error ? err.message : "Unknown error",
-      });
+      // Offline fallback: save to IndexedDB and queue for sync
+      if (!navigator.onLine) {
+        try {
+          await db.holeScores.put({
+            offlineRoundId: roundId,
+            holeNumber: hole.number,
+            strokes: scoreData.strokes,
+            putts: scoreData.putts,
+            penalties: scoreData.penalties,
+            fairwayHit: scoreData.fairwayHit,
+            greenInRegulation: scoreData.greenInRegulation,
+            synced: 0,
+          });
+          await enqueueAction("save_score", {
+            roundId,
+            holeNumber: hole.number,
+            strokes: scoreData.strokes,
+            putts: scoreData.putts,
+            penalties: scoreData.penalties,
+            fairwayHit: scoreData.fairwayHit,
+            greenInRegulation: scoreData.greenInRegulation,
+          });
+          toast({ title: "Saved offline", description: "Score will sync when you reconnect." });
+          router.push(`/play/${roundId}`);
+        } catch {
+          toast({ variant: "destructive", title: "Offline save failed" });
+        }
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Save failed",
+          description: err instanceof Error ? err.message : "Unknown error",
+        });
+      }
     } finally {
       setSaving(false);
     }

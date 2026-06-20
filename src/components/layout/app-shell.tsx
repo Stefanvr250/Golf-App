@@ -8,6 +8,7 @@ import {
   Flag,
   MapPin,
   Trophy,
+  Users,
   User,
 } from "lucide-react";
 
@@ -19,6 +20,7 @@ const navItems = [
   { href: "/play", label: "Play", icon: Flag },
   { href: "/courses", label: "Courses", icon: MapPin },
   { href: "/tournaments", label: "Tournaments", icon: Trophy },
+  { href: "/friends", label: "Friends", icon: Users },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
@@ -28,6 +30,40 @@ function isActive(pathname: string, href: string, exact?: boolean) {
 }
 
 const authPaths = ["/login", "/register"];
+
+const NavLink = React.memo(({ item, isActive: active }: { item: typeof navItems[0], isActive: boolean }) => (
+  <Link
+    href={item.href}
+    prefetch={true}
+    className={cn(
+      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+      active
+        ? "bg-primary/10 text-primary"
+        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+    )}
+  >
+    <item.icon className="h-5 w-5" />
+    {item.label}
+  </Link>
+));
+
+NavLink.displayName = "NavLink";
+
+const MobileNavLink = React.memo(({ item, isActive: active }: { item: typeof navItems[0], isActive: boolean }) => (
+  <Link
+    href={item.href}
+    prefetch={true}
+    className={cn(
+      "flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-medium transition-colors",
+      active ? "text-primary" : "text-muted-foreground"
+    )}
+  >
+    <item.icon className="h-5 w-5" />
+    {item.label}
+  </Link>
+));
+
+MobileNavLink.displayName = "MobileNavLink";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -46,24 +82,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <span className="text-lg font-bold tracking-tight">GolfApp</span>
         </div>
         <nav className="flex flex-1 flex-col gap-1 px-3">
-          {navItems.map((item) => {
-            const active = isActive(pathname, item.href, item.exact);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                  active
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                )}
-              >
-                <item.icon className="h-5 w-5" />
-                {item.label}
-              </Link>
-            );
-          })}
+          {navItems.map((item) => (
+            <NavLink key={item.href} item={item} isActive={isActive(pathname, item.href, item.exact)} />
+          ))}
         </nav>
         <div className="border-t px-6 py-4">
           <OnlineStatus />
@@ -86,22 +107,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* Mobile bottom tab bar */}
         <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t bg-card md:hidden">
-          {navItems.map((item) => {
-            const active = isActive(pathname, item.href, item.exact);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-medium transition-colors",
-                  active ? "text-primary" : "text-muted-foreground"
-                )}
-              >
-                <item.icon className="h-5 w-5" />
-                {item.label}
-              </Link>
-            );
-          })}
+          {navItems.map((item) => (
+            <MobileNavLink key={item.href} item={item} isActive={isActive(pathname, item.href, item.exact)} />
+          ))}
         </nav>
       </div>
     </div>

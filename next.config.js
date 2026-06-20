@@ -16,13 +16,62 @@ const withPWA = require("next-pwa")({
       },
     },
     {
-      // App data API — stale while revalidate
+      // App data API — network first with offline fallback
       urlPattern: /\/api\/.*$/i,
       handler: "NetworkFirst",
       options: {
         cacheName: "api-cache",
         networkTimeoutSeconds: 10,
         expiration: { maxEntries: 100, maxAgeSeconds: 24 * 60 * 60 },
+      },
+    },
+    {
+      // Static assets (JS, CSS) — cache first
+      urlPattern: /\/_next\/static\/.*/i,
+      handler: "CacheFirst",
+      options: {
+        cacheName: "static-assets",
+        expiration: { maxEntries: 200, maxAgeSeconds: 30 * 24 * 60 * 60 },
+        cacheableResponse: { statuses: [0, 200] },
+      },
+    },
+    {
+      // Google Fonts stylesheets — stale while revalidate
+      urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+      handler: "StaleWhileRevalidate",
+      options: {
+        cacheName: "google-fonts-stylesheets",
+        expiration: { maxEntries: 10, maxAgeSeconds: 30 * 24 * 60 * 60 },
+      },
+    },
+    {
+      // Google Fonts webfonts — cache first (immutable)
+      urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+      handler: "CacheFirst",
+      options: {
+        cacheName: "google-fonts-webfonts",
+        expiration: { maxEntries: 30, maxAgeSeconds: 365 * 24 * 60 * 60 },
+        cacheableResponse: { statuses: [0, 200] },
+      },
+    },
+    {
+      // Images — cache first, 30-day expiry
+      urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/i,
+      handler: "CacheFirst",
+      options: {
+        cacheName: "image-cache",
+        expiration: { maxEntries: 100, maxAgeSeconds: 30 * 24 * 60 * 60 },
+        cacheableResponse: { statuses: [0, 200] },
+      },
+    },
+    {
+      // Next.js pages — network first for fresh data, cached fallback
+      urlPattern: /^\/(?!api\/).*/i,
+      handler: "NetworkFirst",
+      options: {
+        cacheName: "pages-cache",
+        networkTimeoutSeconds: 5,
+        expiration: { maxEntries: 50, maxAgeSeconds: 24 * 60 * 60 },
       },
     },
   ],

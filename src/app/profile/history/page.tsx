@@ -31,7 +31,7 @@ export default async function RoundHistoryPage() {
         <div className="rounded-lg border border-dashed p-8 text-center">
           <Trophy className="mx-auto h-8 w-8 text-muted-foreground opacity-50" />
           <p className="mt-2 text-sm text-muted-foreground">No completed rounds yet.</p>
-          <Link href="/play" className="mt-2 inline-block text-sm text-primary hover:underline">
+          <Link href="/play" className="mt-2 inline-block text-sm text-primary hover:underline" prefetch={true}>
             Start your first round
           </Link>
         </div>
@@ -48,7 +48,7 @@ export default async function RoundHistoryPage() {
                 : null;
 
             return (
-              <Link key={round.id} href={`/play/${round.id}/summary`}>
+              <Link key={round.id} href={`/play/${round.id}/summary`} prefetch={true}>
                 <Card className="cursor-pointer transition-colors hover:bg-muted/40">
                   <CardContent className="flex items-center justify-between p-4">
                     <div className="min-w-0 flex-1">
