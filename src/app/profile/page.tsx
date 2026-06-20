@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
+import { HandicapHistory, type HandicapHistoryEntry } from "@/components/profile/HandicapHistory";
 
 export default async function ProfilePage() {
   const supabase = createClient();
@@ -27,6 +28,27 @@ export default async function ProfilePage() {
     .from("rounds")
     .select("*", { count: "exact", head: true })
     .eq("user_id", user.id);
+
+  const { data: hcpHistoryRaw } = await supabase
+    .from("handicap_history")
+    .select("id, handicap_index, differential, calculated_at, round:rounds(id, date, course:courses(name))")
+    .eq("user_id", user.id)
+    .order("calculated_at", { ascending: false })
+    .limit(20);
+
+  const hcpHistory: HandicapHistoryEntry[] = (hcpHistoryRaw ?? []).map((h: any) => ({
+    id: h.id,
+    handicap_index: h.handicap_index,
+    differential: h.differential,
+    calculated_at: h.calculated_at,
+    round: h.round
+      ? {
+          id: h.round.id,
+          date: h.round.date,
+          course: h.round.course ? { name: h.round.course.name } : null,
+        }
+      : null,
+  }));
 
   const initials = profile.display_name
     ? profile.display_name
@@ -72,6 +94,8 @@ export default async function ProfilePage() {
           <Stat label="Member Since" value={memberSince} />
         </CardContent>
       </Card>
+
+      <HandicapHistory entries={hcpHistory} />
     </div>
   );
 }

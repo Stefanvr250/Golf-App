@@ -36,7 +36,7 @@ export const courseCreateSchema = z.object({
 export const courseSearchOsmSchema = z.object({
   lat: z.coerce.number().min(-90).max(90).optional(),
   lng: z.coerce.number().min(-180).max(180).optional(),
-  radius: z.coerce.number().int().min(100).max(100000).default(25000),
+  radius: z.coerce.number().int().min(100).max(200000).default(50000),
   q: z.string().max(120).optional(),
 });
 

@@ -47,9 +47,9 @@ PRD references are to user stories (US#) and acceptance criteria (AC) from `prd.
 
 ## M2: Authentication & User Profiles
 
-- [x] **Task 2.1** `[S→1.4]` Build login page at `src/app/(auth)/login/page.tsx` with email/password form and Google + Apple OAuth buttons using Supabase Auth. Redirect to dashboard on success.
+- [x] **Task 2.1** `[S→1.4]` Build login page at `src/app/(auth)/login/page.tsx` with email/password form using Supabase Auth. Redirect to dashboard on success.
   - **PRD**: US#8 (handicap requires auth), AC — Authentication
-  - **Deliverable**: User can log in with email, Google, and Apple
+  - **Deliverable**: User can log in with email/password
 
 - [x] **Task 2.2** `[S→1.4]` Build registration page at `src/app/(auth)/register/page.tsx` with email, password, display name, and TOS/privacy consent checkbox (required). Use Supabase `signUp()`.
   - **PRD**: POPIA — Consent at registration
@@ -135,39 +135,39 @@ PRD references are to user stories (US#) and acceptance criteria (AC) from `prd.
 
 ## M4: Scoring & Round Tracking
 
-- [ ] **Task 4.1** `[S→3.5]` Build "Start Round" page at `src/app/play/page.tsx` — select course (from recent or search), select tee set, optional tournament link. Create `rounds` row with `status='in_progress'`. Redirect to scorecard.
+- [x] **Task 4.1** `[S→3.5]` Build "Start Round" page at `src/app/play/page.tsx` — select course (from recent or search), select tee set, optional tournament link. Create `rounds` row with `status='in_progress'`. Redirect to scorecard.
   - **PRD**: US#5 — Record scores
   - **Deliverable**: Round created, user redirected to scorecard
 
-- [ ] **Task 4.2** `[S→1.2,1.9]` Build `src/components/scoring/HoleScoreInput.tsx` — form component for single hole: strokes (number stepper), putts (number stepper), penalties (number stepper), fairway hit (yes/no/na toggle), GIR (yes/no toggle), club selector (dropdown with common clubs), lie type (dropdown). Validate with Zod. Auto-calculate GIR based on strokes/putts/par if not manually set.
+- [x] **Task 4.2** `[S→1.2,1.9]` Build `src/components/scoring/HoleScoreInput.tsx` — form component for single hole: strokes (number stepper), putts (number stepper), penalties (number stepper), fairway hit (yes/no/na toggle), GIR (yes/no toggle), club selector (dropdown with common clubs), lie type (dropdown). Validate with Zod. Auto-calculate GIR based on strokes/putts/par if not manually set.
   - **PRD**: US#5, AC — All scoring fields
   - **Deliverable**: Complete hole score input with all fields
 
-- [ ] **Task 4.3** `[S→4.2]` Build active scorecard page at `src/app/play/[roundId]/page.tsx` — grid showing all 18 (or 9) holes with: hole#, par, yardage, score, +/- par indicator. Tappable rows navigate to hole detail. Show running total. "Finish Round" button.
+- [x] **Task 4.3** `[S→4.2]` Build active scorecard page at `src/app/play/[roundId]/page.tsx` — grid showing all 18 (or 9) holes with: hole#, par, yardage, score, +/- par indicator. Tappable rows navigate to hole detail. Show running total. "Finish Round" button.
   - **PRD**: US#5 — Scorecard
   - **Deliverable**: Full scorecard with navigation to individual holes
 
-- [ ] **Task 4.4** `[S→4.2,3.10]` Build hole detail page at `src/app/play/[roundId]/hole/[n]/page.tsx` — CourseMap centered on current hole with GPSTracker, YardageCircles, and ShotTracker. HoleScoreInput below the map. Previous/next hole navigation.
+- [x] **Task 4.4** `[S→4.2,3.10]` Build hole detail page at `src/app/play/[roundId]/hole/[n]/page.tsx` — CourseMap centered on current hole with GPSTracker, YardageCircles, and ShotTracker. HoleScoreInput below the map. Previous/next hole navigation.
   - **PRD**: US#2, US#3, US#5 — GPS + scoring per hole
   - **Deliverable**: Complete hole play experience with map and scoring
 
-- [ ] **Task 4.5** `[S→4.3]` Implement round finalization logic — on "Finish Round" button: calculate `total_strokes`, `total_putts`, update `rounds.status` to `completed`, update `rounds.total_strokes` and `rounds.total_putts`. Trigger handicap recalculation (M5).
+- [x] **Task 4.5** `[S→4.3]` Implement round finalization logic — on "Finish Round" button: calculate `total_strokes`, `total_putts`, update `rounds.status` to `completed`, update `rounds.total_strokes` and `rounds.total_putts`. Trigger handicap recalculation (M5).
   - **PRD**: US#5, AC — Round completion
   - **Deliverable**: Round marked complete with calculated totals
 
-- [ ] **Task 4.6** `[S→4.5]` Build `src/components/scoring/RoundSummary.tsx` — calculate and display: total score, score vs par (+/-), total putts, putts per hole average, FIR % (fairways hit / par 4+5 holes), GIR %, scoring average by par 3/4/5, up-and-down %, sand save %.
+- [x] **Task 4.6** `[S→4.5]` Build `src/components/scoring/RoundSummary.tsx` — calculate and display: total score, score vs par (+/-), total putts, putts per hole average, FIR % (fairways hit / par 4+5 holes), GIR %, scoring average by par 3/4/5, up-and-down %, sand save %.
   - **PRD**: US#6, AC — Round statistics
   - **Deliverable**: All stats calculated correctly
 
-- [ ] **Task 4.7** `[S→4.6]` Build round summary page at `src/app/play/[roundId]/summary/page.tsx` — display RoundSummary component, course name, date, tee set. Include "Share Round" and "Export" buttons.
+- [x] **Task 4.7** `[S→4.6]` Build round summary page at `src/app/play/[roundId]/summary/page.tsx` — display RoundSummary component, course name, date, tee set. Include "Share Round" and "Export" buttons.
   - **PRD**: US#6
   - **Deliverable**: Summary page with all stats and actions
 
-- [ ] **Task 4.8** `[S→4.5]` Build round history page at `src/app/profile/history/page.tsx` — list of completed rounds sorted by date descending. Each row shows: date, course name, score, vs par, putts. Tappable to view full summary.
+- [x] **Task 4.8** `[S→4.5]` Build round history page at `src/app/profile/history/page.tsx` — list of completed rounds sorted by date descending. Each row shows: date, course name, score, vs par, putts. Tappable to view full summary.
   - **PRD**: US#6
   - **Deliverable**: Round history list with key stats
 
-- [ ] **Task 4.9** `[S→4.8]` Build stats page at `src/app/profile/stats/page.tsx` — aggregate career stats: scoring average, best round, average putts/round, FIR %, GIR %, par 3/4/5 averages, rounds played, up-and-down %, sand save %. Filter by time period (last 5/10/20 rounds, all time).
+- [x] **Task 4.9** `[S→4.8]` Build stats page at `src/app/profile/stats/page.tsx` — aggregate career stats: scoring average, best round, average putts/round, FIR %, GIR %, par 3/4/5 averages, rounds played, up-and-down %, sand save %. Filter by time period (last 5/10/20 rounds, all time).
   - **PRD**: US#6
   - **Deliverable**: Comprehensive stats dashboard
 
@@ -175,23 +175,23 @@ PRD references are to user stories (US#) and acceptance criteria (AC) from `prd.
 
 ## M5: Handicap System
 
-- [ ] **Task 5.1** `[S→1.1]` Implement `src/lib/scoring/handicap.ts` — export `calculateHandicap(rounds: RoundDifferential[]): number | null`. Logic: if <3 rounds return null. Calculate differential per round: `(score - par) × (113 / slope)` if slope available, else `score - par`. Take best N differentials (N based on total rounds per simplified WHS table). Return average × 0.96, rounded to 1 decimal.
+- [x] **Task 5.1** `[S→1.1]` Implement `src/lib/scoring/handicap.ts` — export `calculateHandicap(rounds: RoundDifferential[]): number | null`. Logic: if <3 rounds return null. Calculate differential per round: `(score - par) × (113 / slope)` if slope available, else `score - par`. Take best N differentials (N based on total rounds per simplified WHS table). Return average × 0.96, rounded to 1 decimal.
   - **PRD**: US#8, AC — Simplified handicap
   - **Deliverable**: Function returns correct handicap for test cases
 
-- [ ] **Task 5.2** `[S→5.1,1.7]` Build `POST /api/handicap/recalculate` route handler at `src/app/api/handicap/recalculate/route.ts`. Fetch last 20 completed rounds for user, call `calculateHandicap()`, update `profiles.handicap_index`, insert row into `handicap_history`. Return previous/new handicap.
+- [x] **Task 5.2** `[S→5.1,1.7]` Build `POST /api/handicap/recalculate` route handler at `src/app/api/handicap/recalculate/route.ts`. Fetch last 20 completed rounds for user, call `calculateHandicap()`, update `profiles.handicap_index`, insert row into `handicap_history`. Return previous/new handicap.
   - **PRD**: US#8, AC — Auto-recalculate
   - **Deliverable**: API recalculates and persists handicap
 
-- [ ] **Task 5.3** `[S→5.2,4.5]` Integrate handicap recalculation into round finalization — after `rounds.status` set to `completed`, call `/api/handicap/recalculate`. Show toast with handicap change.
+- [x] **Task 5.3** `[S→5.2,4.5]` Integrate handicap recalculation into round finalization — after `rounds.status` set to `completed`, call `/api/handicap/recalculate`. Show toast with handicap change.
   - **PRD**: US#8, AC — Updates after each round
   - **Deliverable**: Handicap recalculated on every round completion
 
-- [ ] **Task 5.4** `[S→5.2]` Implement `src/hooks/useHandicap.ts` — fetch current handicap and last change from Supabase. Return `{ handicap, previousHandicap, lastUpdated }`.
+- [x] **Task 5.4** `[S→5.2]` Implement `src/hooks/useHandicap.ts` — fetch current handicap and last change from Supabase. Return `{ handicap, previousHandicap, lastUpdated }`.
   - **PRD**: US#8
   - **Deliverable**: Hook provides handicap data
 
-- [ ] **Task 5.5** `[S→5.3]` Build handicap history view on profile page — expandable section showing list/chart of handicap changes over time (date, handicap value, round that triggered it).
+- [x] **Task 5.5** `[S→5.3]` Build handicap history view on profile page — expandable section showing list/chart of handicap changes over time (date, handicap value, round that triggered it).
   - **PRD**: US#9, AC — Handicap history
   - **Deliverable**: History visible with date and value per entry
 
