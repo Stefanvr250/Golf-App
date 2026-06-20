@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Users } from "lucide-react";
+import * as React from "react";
 
 export interface TournamentCardProps {
   id: string;
@@ -14,7 +15,7 @@ export interface TournamentCardProps {
   participantCount?: number;
 }
 
-export function TournamentCard({
+export const TournamentCard = React.memo(function TournamentCard({
   id,
   name,
   date,
@@ -31,7 +32,7 @@ export function TournamentCard({
     status === "completed" ? "secondary" : status === "in_progress" ? "default" : "outline";
 
   return (
-    <Link href={`/tournaments/${id}`}>
+    <Link href={`/tournaments/${id}`} prefetch={true}>
       <Card className="cursor-pointer hover:border-primary/60">
         <CardContent className="p-4 space-y-2">
           <div className="flex items-start justify-between gap-2">
@@ -59,4 +60,4 @@ export function TournamentCard({
       </Card>
     </Link>
   );
-}
+});

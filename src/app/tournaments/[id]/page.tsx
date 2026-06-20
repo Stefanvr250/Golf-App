@@ -138,6 +138,10 @@ export default async function TournamentDetailPage({ params }: Props) {
           <Button variant="outline" className="w-full">Open Chat</Button>
         </Link>
 
+        <Link href={`/tournaments/${tournament.id}/predictions`}>
+          <Button variant="outline" className="w-full">Predictions</Button>
+        </Link>
+
         {isOrganizer && tournament.status !== "completed" && (
           <FinalizeTournamentButton tournamentId={tournament.id} />
         )}

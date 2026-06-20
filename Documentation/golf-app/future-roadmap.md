@@ -4,6 +4,31 @@ Deferred features and enhancements collected during the PRD phase. Items here ar
 
 ---
 
+## Phase 1.5 — Production Deployment
+
+Move from localhost development to live production hosting for active use and demonstrations:
+- **Hosting platform setup** — Deploy to Vercel (or similar) with environment variables configured (Supabase URL/keys, MapTiler key)
+- **Custom domain** — Configure custom domain (e.g., golfapp.com or subdomain) for professional appearance
+- **Build optimization** — Ensure production build passes, configure caching headers, optimize bundle size
+- **Database migrations** — Run all Supabase migrations on production database
+- **Testing on production** - Full user flow testing on live URL: register → create course → play round → view stats → tournament → leaderboard
+- **Monitoring** — Set up error tracking (e.g., Sentry) and analytics to monitor production performance
+
+---
+
+## Phase 1.5 — Performance Optimization
+
+Quick wins identified for improving page load responsiveness:
+- **Route prefetching** - Add `prefetch={true}` to all navigation links to pre-load routes on hover
+- **React.memo** - Memoize list components (CourseCard, TournamentCard, nav links) to prevent unnecessary re-renders
+- **Code splitting** - Maps are already dynamically imported, but other heavy components could benefit
+- **Supabase query optimization** - Review indexes for frequently queried columns (user_id, course_id)
+- **Server-side data fetching** - Convert client-side useEffect data fetching to server components where possible
+
+Target: <2s initial load, <500ms route transitions.
+
+---
+
 ## Phase 1.5 — Admin Onboarding & Data Curation
 
 Dedicated admin interface for the first admin account to complete before full launch. These are operational tasks, not public features, but they are critical for launch quality.
@@ -18,11 +43,13 @@ Dedicated admin interface for the first admin account to complete before full la
 - **Course verification wizard** — Confirm course name, address, city, province, GPS coordinates, and number of holes.
 - **Bulk course import** — Upload CSV of course names + coordinates to seed new provinces or countries.
 - **Change request review** — Admin UI to view, approve/reject user-submitted `course_change_requests` and apply changes to the database.
+- **Verified course data system** — Flag courses as "verified" when official data is confirmed (slope, rating, hole details). Display verification badge on course cards. Allow admins to mark courses as verified/unverified.
 
 ### Search & Discovery
 - **Configurable search radius** — Let users select 25 km, 50 km, 100 km, or 200 km when using 
 
 ### Data Sources
+- **External course database API integration** — Connect to a comprehensive course data API (e.g., GolfNow, BlueGolf, or similar) to fetch complete course information: par per hole, total course length, hole-by-hole yardage, pin placement data, tee box locations and yardages, hole handicap indexes, course rating, slope rating. Replace/supplement local DB and OSM data with authoritative source.
 - **GolfRSA / HNA integration** — If API access becomes available, pull official course ratings, slope ratings, and handicap indexes.
 - **OSM fallback deprecation** — Remove OpenStreetMap import entirely; keep only curated community data.
 
@@ -49,6 +76,12 @@ Dedicated admin interface for the first admin account to complete before full la
 - **Course condition reporting** — Allow users to report green speed, course wetness, maintenance status, and general conditions.
 - **Weather overlay** — Integrate a free weather API to show current and forecasted weather conditions for the course being played.
 
+### Gamification
+- **Achievements & badges** — Unlock badges for milestones like "First Eagle", "Break 80", "Hole in One", "Consecutive rounds under par", "100 rounds played". Display badge collection on profile.
+- **Streak tracking** — Track consecutive rounds under par, consecutive rounds with no 3-putts, consecutive rounds with FIR > 50%. Show streak counters on profile and dashboard.
+- **Leaderboards** — Beyond tournaments, add course record leaderboards (best score per course), seasonal rankings (best performers over time period), and skill-based leaderboards (by handicap range).
+- **Points system** — Earn points for completing rounds, sharing scores, participating in tournaments, referring friends. Points unlock visual rewards or status indicators.
+
 ---
 
 ## Phase 3 — Platform Expansion
@@ -72,10 +105,12 @@ Dedicated admin interface for the first admin account to complete before full la
 - **Real-money betting integration** — Optional integration with licensed betting platforms (subject to regulatory review).
 - **AI swing tips / coaching** — Video upload with AI-powered swing analysis and improvement suggestions.
 - **Tee time booking** — Integration with course booking systems.
+- **Local golf communities** — Create or join local golf groups, organize meetups, find playing partners based on skill level and location.
 
 ### Data & Analytics
 - **Advanced statistics dashboard** — Strokes gained analysis, scoring trends, club distance averages over time, course-specific performance breakdowns.
 - **CSV/PDF enhancements** — Richer export formats, season summaries, shareable round graphics.
+- **Friend performance comparisons** — Compare stats directly against friends: scoring average, handicap trends, head-to-head records, course performance comparisons, stat-by-stat breakdowns (FIR %, GIR %, putts/round). Visual comparison charts.
 
 ### Content
 - **Multi-language / localization** — Support for Afrikaans and other languages beyond English.

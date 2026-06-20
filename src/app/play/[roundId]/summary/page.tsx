@@ -4,7 +4,9 @@ import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RoundSummary } from "@/components/scoring/RoundSummary";
-import { ArrowLeft, Share2, Download } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { ShareRoundButton } from "@/components/social/ShareRoundButton";
+import { ExportButtons } from "@/components/scoring/ExportButtons";
 
 interface Props {
   params: { roundId: string };
@@ -86,19 +88,15 @@ export default async function RoundSummaryPage({ params }: Props) {
 
       {/* Actions */}
       <div className="flex gap-3">
-        <Button variant="outline" className="flex-1" size="lg">
-          <Share2 className="mr-2 h-4 w-4" />
-          Share Round
-        </Button>
-        <Button variant="outline" className="flex-1" size="lg">
-          <Download className="mr-2 h-4 w-4" />
-          Export
-        </Button>
+        <ShareRoundButton
+          roundId={params.roundId}
+          userId={user.id}
+          courseName={course.name}
+          score={round.total_strokes}
+          isShared={round.is_shared}
+        />
+        <ExportButtons roundId={params.roundId} />
       </div>
-
-      <p className="text-center text-xs text-muted-foreground">
-        Export features coming in Milestone 10.
-      </p>
     </div>
   );
 }
