@@ -1,0 +1,20 @@
+{
+  "name": "GolfApp — Scoring, GPS & Tournaments",
+  "short_name": "GolfApp",
+  "description": "Course GPS, detailed scoring, handicap tracking, tournaments, and social play.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#16803c",
+  "categories": ["sports", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

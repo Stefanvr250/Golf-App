@@ -1,6 +1,6 @@
 ---
 name: commit-changes
-description: Stage, commit, and push changes for a specific folder or the entire repository
+description: Stage, commit, push changes, and create a PR to master
 argument-hint: "Folder path to commit (optional, defaults to all changes)"
 ---
 
@@ -33,5 +33,10 @@ argument-hint: "Folder path to commit (optional, defaults to all changes)"
 7. **Push to remote:**
    - Run `git push` to push the committed changes to the remote repository
 
-8. **Confirm completion:**
-   - Show the user what was committed and pushed
+8. **Create or update a Pull Request:**
+   - Check if a PR already exists for the current branch: `gh pr list --head <current-branch> --state open`
+   - If no open PR exists: run `gh pr create --base master --fill` to create one
+   - If an open PR already exists: the push in step 7 automatically updates it — inform the user that the existing PR has been updated with the new changes
+
+9. **Confirm completion:**
+   - Show the user what was committed, pushed, and the PR URL
