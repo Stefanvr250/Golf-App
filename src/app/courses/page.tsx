@@ -11,12 +11,41 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import type { CourseSearchResult } from "@/app/api/courses/search-osm/route";
 
+const RADIUS_OPTIONS = [
+  { label: "25 km", value: 25000 },
+  { label: "50 km", value: 50000 },
+  { label: "100 km", value: 100000 },
+  { label: "200 km", value: 200000 },
+];
+
 export default function CoursesPage() {
   const { toast } = useToast();
   const [query, setQuery] = React.useState("");
   const [results, setResults] = React.useState<CourseSearchResult[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [searched, setSearched] = React.useState(false);
+  const [radius, setRadius] = React.useState(50000);
+  const lastPosRef = React.useRef<{ lat: number; lng: number } | null>(null);
+
+  // Re-fetch nearby courses when radius changes (after a Near Me search)
+  React.useEffect(() => {
+    if (!lastPosRef.current) return;
+    const { lat, lng } = lastPosRef.current;
+    setLoading(true);
+    fetch(`/api/courses/search-osm?lat=${lat}&lng=${lng}&radius=${radius}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setResults(data.results ?? []);
+      })
+      .catch((err) => {
+        toast({
+          variant: "destructive",
+          title: "Search failed",
+          description: err instanceof Error ? err.message : "Unknown error",
+        });
+      })
+      .finally(() => setLoading(false));
+  }, [radius, toast]);
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -53,8 +82,9 @@ export default function CoursesPage() {
       async (pos) => {
         try {
           const { latitude, longitude } = pos.coords;
+          lastPosRef.current = { lat: latitude, lng: longitude };
           const res = await fetch(
-            `/api/courses/search-osm?lat=${latitude}&lng=${longitude}&radius=25000`
+            `/api/courses/search-osm?lat=${latitude}&lng=${longitude}&radius=${radius}`
           );
           const data = await res.json();
           if (!res.ok) throw new Error(data.error ?? "Search failed");
@@ -70,10 +100,14 @@ export default function CoursesPage() {
         }
       },
       (err) => {
-        toast({ variant: "destructive", title: "Location error", description: err.message });
+        toast({
+          variant: "destructive",
+          title: "Location error",
+          description: `${err.message}. Try searching by course name instead.`,
+        });
         setLoading(false);
       },
-      { enableHighAccuracy: true, timeout: 10000 }
+      { enableHighAccuracy: true, timeout: 30000, maximumAge: 60000 }
     );
   }
 
@@ -121,23 +155,42 @@ export default function CoursesPage() {
       </div>
 
       {/* Search form */}
-      <form onSubmit={handleSearch} className="flex gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search courses by name…"
-            className="pl-9"
-          />
+      <form onSubmit={handleSearch} className="space-y-3">
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search courses by name…"
+              className="pl-9"
+            />
+          </div>
+          <Button type="submit" disabled={loading}>
+            Search
+          </Button>
+          <Button type="button" variant="outline" onClick={handleNearMe} disabled={loading}>
+            <MapPin className="mr-1.5 h-4 w-4" />
+            Near Me
+          </Button>
         </div>
-        <Button type="submit" disabled={loading}>
-          Search
-        </Button>
-        <Button type="button" variant="outline" onClick={handleNearMe} disabled={loading}>
-          <MapPin className="mr-1.5 h-4 w-4" />
-          Near Me
-        </Button>
+
+        {/* Radius selector */}
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-muted-foreground">Radius:</span>
+          {RADIUS_OPTIONS.map((opt) => (
+            <Button
+              key={opt.value}
+              type="button"
+              size="sm"
+              variant={radius === opt.value ? "default" : "outline"}
+              className="h-7 px-2.5 text-xs"
+              onClick={() => setRadius(opt.value)}
+            >
+              {opt.label}
+            </Button>
+          ))}
+        </div>
       </form>
 
       {/* Results */}

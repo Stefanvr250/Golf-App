@@ -28,6 +28,7 @@ interface CourseMapProps {
   holes?: HoleMarker[];
   zoom?: number;
   className?: string;
+  children?: React.ReactNode;
 }
 
 export function CourseMap({
@@ -36,6 +37,7 @@ export function CourseMap({
   holes = [],
   zoom = 15,
   className = "h-[400px] w-full rounded-lg overflow-hidden",
+  children,
 }: CourseMapProps) {
   const [mapStyle, setMapStyle] = React.useState<"osm" | "satellite">("osm");
   const maptilerKey = process.env.NEXT_PUBLIC_MAPTILER_KEY ?? "";
@@ -76,6 +78,7 @@ export function CourseMap({
             </div>
           </Marker>
         ))}
+        {children}
       </MapGL>
 
       {/* Layer toggle */}

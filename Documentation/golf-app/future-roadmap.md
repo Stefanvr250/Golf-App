@@ -37,6 +37,10 @@ Dedicated admin interface for the first admin account to complete before full la
 - **Scale tournament size** — Increase the 20-participant limit as infrastructure allows.
 - **Additional formats** — Add more tournament formats beyond the initial set (e.g., Mixed, Shamble variations, custom scoring rules).
 
+### Authentication
+- **Google OAuth** — Sign in with Google via Supabase Auth for faster onboarding.
+- **Apple OAuth** — Sign in with Apple for iOS/Safari users.
+
 ### Notifications
 - **Push notifications** — Browser push notifications for score updates, leaderboard changes, tournament invitations, and friend activity.
 - **Email notifications** — Fallback notification system for platforms with poor push support (e.g., iOS Safari).
