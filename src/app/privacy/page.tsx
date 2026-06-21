@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
 export default function PrivacyPolicyPage() {
+  const effectiveDate = "1 January 2025";
+
   return (
     <div className="container max-w-2xl space-y-6 py-6">
       <div className="flex items-center gap-3">
@@ -15,7 +17,7 @@ export default function PrivacyPolicyPage() {
       </div>
 
       <div className="prose prose-sm max-w-none dark:prose-invert">
-        <p><strong>Effective Date:</strong> {new Date().toLocaleDateString("en-ZA")}</p>
+        <p><strong>Effective Date:</strong> {effectiveDate}</p>
 
         <h2>1. Information We Collect</h2>
         <p>

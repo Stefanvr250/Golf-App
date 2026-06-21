@@ -3,14 +3,9 @@ import { z } from "zod";
 export const tournamentFormats = [
   "stroke_play",
   "stableford",
-  "best_ball",
-  "scramble",
   "match_play",
   "ryder_cup",
-  "alternate_shot",
   "skins",
-  "shamble",
-  "two_person_scramble",
 ] as const;
 
 export const tournamentCreateSchema = z.object({
@@ -20,6 +15,7 @@ export const tournamentCreateSchema = z.object({
   numHoles: z.union([z.literal(9), z.literal(18)]),
   maxParticipants: z.number().int().min(2).max(20).default(20),
   date: z.string().date(),
+  leagueId: z.string().uuid().optional(),
 });
 
 export const tournamentInviteSchema = z.object({

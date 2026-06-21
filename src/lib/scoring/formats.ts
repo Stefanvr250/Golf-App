@@ -73,23 +73,6 @@ function stablefordLeaderboard(participants: ParticipantScore[]): LeaderboardEnt
   return entries;
 }
 
-// ─── Best Ball ───────────────────────────────────────────────────────────────
-
-function bestBallLeaderboard(participants: ParticipantScore[]): LeaderboardEntry[] {
-  // For best ball, we score per-hole the lowest of any participant
-  // This simplified version just shows individual scores; real best ball needs team grouping.
-  // We rank by total strokes (lowest individual score per hole across "team").
-  // Without team info, fall back to stroke play ranking.
-  return strokePlayLeaderboard(participants);
-}
-
-// ─── Scramble ────────────────────────────────────────────────────────────────
-
-function scrambleLeaderboard(participants: ParticipantScore[]): LeaderboardEntry[] {
-  // Scramble is team-based; without team info, show stroke play
-  return strokePlayLeaderboard(participants);
-}
-
 // ─── Match Play ──────────────────────────────────────────────────────────────
 
 function matchPlayLeaderboard(participants: ParticipantScore[]): LeaderboardEntry[] {
@@ -175,21 +158,6 @@ function ryderCupLeaderboard(participants: ParticipantScore[]): LeaderboardEntry
   return entries;
 }
 
-// ─── Alternate Shot / Shamble / 2-Person Scramble ────────────────────────────
-// Team formats without team data: fall back to stroke play sorting
-
-function alternativeShotLeaderboard(participants: ParticipantScore[]): LeaderboardEntry[] {
-  return strokePlayLeaderboard(participants);
-}
-
-function shambleLeaderboard(participants: ParticipantScore[]): LeaderboardEntry[] {
-  return strokePlayLeaderboard(participants);
-}
-
-function twoPersonScrambleLeaderboard(participants: ParticipantScore[]): LeaderboardEntry[] {
-  return strokePlayLeaderboard(participants);
-}
-
 // ─── Main entry ──────────────────────────────────────────────────────────────
 
 export function calculateLeaderboard(
@@ -201,22 +169,12 @@ export function calculateLeaderboard(
       return strokePlayLeaderboard(participants);
     case "stableford":
       return stablefordLeaderboard(participants);
-    case "best_ball":
-      return bestBallLeaderboard(participants);
-    case "scramble":
-      return scrambleLeaderboard(participants);
     case "match_play":
       return matchPlayLeaderboard(participants);
     case "ryder_cup":
       return ryderCupLeaderboard(participants);
-    case "alternate_shot":
-      return alternativeShotLeaderboard(participants);
     case "skins":
       return skinsLeaderboard(participants);
-    case "shamble":
-      return shambleLeaderboard(participants);
-    case "two_person_scramble":
-      return twoPersonScrambleLeaderboard(participants);
     default:
       return strokePlayLeaderboard(participants);
   }

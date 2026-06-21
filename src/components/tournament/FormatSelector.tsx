@@ -13,14 +13,9 @@ interface FormatOption {
 const FORMAT_OPTIONS: FormatOption[] = [
   { value: "stroke_play", label: "Stroke Play", description: "Lowest total strokes wins." },
   { value: "stableford", label: "Stableford", description: "Points per hole: bogey=1, par=2, birdie=3, eagle=4, albatross=5." },
-  { value: "best_ball", label: "Best Ball", description: "Team takes lowest individual score per hole." },
-  { value: "scramble", label: "Scramble", description: "All players hit, team plays from best shot each time." },
   { value: "match_play", label: "Match Play", description: "Head-to-head, win or lose each hole. Most holes won wins." },
   { value: "ryder_cup", label: "Ryder Cup", description: "Team match play with point-based scoring." },
-  { value: "alternate_shot", label: "Alternate Shot", description: "Partners alternate hitting the same ball each hole." },
   { value: "skins", label: "Skins", description: "Lowest score wins the hole (skin). Ties carry over." },
-  { value: "shamble", label: "Shamble", description: "All tee off, pick best drive, then play own ball in." },
-  { value: "two_person_scramble", label: "2-Person Scramble", description: "Two-player teams, play from best shot each time." },
 ];
 
 interface FormatSelectorProps {

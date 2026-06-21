@@ -19,5 +19,9 @@ WHERE id NOT IN (
 );
 
 -- Prevent future duplicates
-ALTER TABLE courses
-ADD CONSTRAINT IF NOT EXISTS courses_name_unique UNIQUE (name);
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'courses_name_unique') THEN
+    ALTER TABLE courses ADD CONSTRAINT courses_name_unique UNIQUE (name);
+  END IF;
+END $$;

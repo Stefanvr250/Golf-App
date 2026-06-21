@@ -14,6 +14,7 @@ export function useRealtimeLeaderboard({ tournamentId, format }: UseRealtimeLead
   const [leaderboard, setLeaderboard] = React.useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [lastUpdated, setLastUpdated] = React.useState<Date | null>(null);
+  const [subscribedRoundIds, setSubscribedRoundIds] = React.useState<string[]>([]);
   const supabase = React.useMemo(() => createClient(), []);
 
   const fetchLeaderboard = React.useCallback(async () => {
@@ -33,6 +34,7 @@ export function useRealtimeLeaderboard({ tournamentId, format }: UseRealtimeLead
         .in("status", ["in_progress", "completed"]);
 
       if (!inProgress || inProgress.length === 0) {
+        setSubscribedRoundIds([]);
         setLeaderboard([]);
         setLoading(false);
         return;
@@ -40,6 +42,7 @@ export function useRealtimeLeaderboard({ tournamentId, format }: UseRealtimeLead
 
       // Fetch hole scores for in-progress rounds
       const roundIds = inProgress.map((r: any) => r.id);
+      setSubscribedRoundIds(roundIds);
       const { data: scores } = await supabase
         .from("hole_scores")
         .select("round_id, hole_number, strokes, holes:hole_id(par)")
@@ -72,6 +75,7 @@ export function useRealtimeLeaderboard({ tournamentId, format }: UseRealtimeLead
 
     // Completed rounds path
     const roundIds = rounds.map((r: any) => r.id);
+    setSubscribedRoundIds(roundIds);
     const { data: scores } = await supabase
       .from("hole_scores")
       .select("round_id, hole_number, strokes, holes:hole_id(par)")
@@ -103,8 +107,13 @@ export function useRealtimeLeaderboard({ tournamentId, format }: UseRealtimeLead
 
   React.useEffect(() => {
     fetchLeaderboard();
+  }, [fetchLeaderboard]);
 
-    // Subscribe to hole_scores changes for real-time updates
+  React.useEffect(() => {
+    const roundFilter = subscribedRoundIds.length > 0
+      ? `round_id=in.(${subscribedRoundIds.join(",")})`
+      : null;
+
     const channel = supabase
       .channel(`tournament-${tournamentId}`)
       .on(
@@ -112,18 +121,35 @@ export function useRealtimeLeaderboard({ tournamentId, format }: UseRealtimeLead
         {
           event: "*",
           schema: "public",
-          table: "hole_scores",
+          table: "rounds",
+          filter: `tournament_id=eq.${tournamentId}`,
         },
         () => {
           fetchLeaderboard();
         }
-      )
-      .subscribe();
+      );
+
+    if (roundFilter) {
+      channel.on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "hole_scores",
+          filter: roundFilter,
+        },
+        () => {
+          fetchLeaderboard();
+        }
+      );
+    }
+
+    channel.subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase, tournamentId, fetchLeaderboard]);
+  }, [supabase, tournamentId, subscribedRoundIds, fetchLeaderboard]);
 
   return { leaderboard, loading, lastUpdated, refresh: fetchLeaderboard };
 }

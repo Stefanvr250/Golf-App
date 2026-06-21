@@ -41,7 +41,7 @@ GolfApp is a Progressive Web App (PWA) built with Next.js and Supabase that prov
 │ │ + PostGIS │ │  │ │ (OSM data)   │ │
 │ ├───────────┤ │  │ ├──────────────┤ │
 │ │ Auth      │ │  │ │ MapTiler     │ │
-│ │ (OAuth)   │ │  │ │ (satellite)  │ │
+│ │ (Email)   │ │  │ │ (satellite)  │ │
 │ ├───────────┤ │  │ ├──────────────┤ │
 │ │ Realtime  │ │  │ │ OSM Tiles    │ │
 │ │ (WebSocket│ │  │ │ (map tiles)  │ │
@@ -58,7 +58,7 @@ GolfApp is a Progressive Web App (PWA) built with Next.js and Supabase that prov
 2. **GPS & Maps**: MapLibre GL JS renders map tiles (OSM for streets, MapTiler for satellite). Browser Geolocation API provides real-time position. Distance calculations are done client-side using Turf.js.
 3. **Scoring**: Scores are written to IndexedDB first (offline-safe), then synced to Supabase when online. Supabase Realtime broadcasts score changes to tournament participants.
 4. **Leaderboard**: Supabase Realtime subscriptions on the `scores` table push updates to all connected clients within 3 seconds.
-5. **Auth**: Supabase Auth handles email/password, Google OAuth, and Apple OAuth. Invite links generate JWT tokens for guest access.
+5. **Auth**: Supabase Auth handles email/password at launch. Google OAuth and Apple OAuth are deferred to the roadmap. Invite links generate JWT tokens for guest access.
 
 ---
 
@@ -665,7 +665,7 @@ src/
 | **Framework** | Next.js 14+ (App Router) | SSR/SSG, API routes, PWA support via `next-pwa`, Vercel free hosting | Remix (less PWA ecosystem), SvelteKit (smaller community) |
 | **UI Library** | React + shadcn/ui + TailwindCSS | Modern, accessible components; utility-first styling; mobile-friendly | MUI (heavier bundle), Chakra UI (less customizable) |
 | **Database** | Supabase PostgreSQL + PostGIS | Free tier (500MB, 50k MAU), built-in auth/realtime/storage, PostGIS for geo queries | Firebase (no PostGIS), PlanetScale (no geo), self-hosted Postgres (hosting cost) |
-| **Auth** | Supabase Auth | Email/password + Google + Apple OAuth built-in, free, JWT-based | NextAuth.js (extra complexity), Auth0 (paid at scale) |
+| **Auth** | Supabase Auth | Email/password at launch (Google + Apple OAuth deferred to roadmap), free, JWT-based | NextAuth.js (extra complexity), Auth0 (paid at scale) |
 | **Real-time** | Supabase Realtime | WebSocket subscriptions on DB changes, 2M messages/month free, 200 concurrent connections | Socket.io (requires own server), Pusher (paid) |
 | **Maps** | MapLibre GL JS | Open-source, free, GPU-accelerated, supports custom tile sources | Leaflet (no vector tiles), Google Maps (paid), Mapbox (paid at scale) |
 | **Map Tiles (street)** | OpenStreetMap raster tiles | Free, worldwide coverage, no API key | Stadia Maps (free tier limited) |
@@ -698,7 +698,7 @@ src/
 
 ### Authentication & Authorization
 
-- **Supabase Auth** handles all authentication with bcrypt-hashed passwords and OAuth 2.0 flows.
+- **Supabase Auth** handles email/password authentication at launch with bcrypt-hashed passwords. OAuth 2.0 providers are deferred to the roadmap.
 - **Row Level Security (RLS)** on every table — users can only read/write their own data unless explicitly shared (tournaments, friends).
 - **Admin role** checked via `profiles.role = 'admin'` in RLS policies for course data management.
 - **Invite links** use random 12-character hex codes. Joining a tournament requires a valid invite code + authenticated user.

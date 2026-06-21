@@ -115,7 +115,7 @@ GolfApp is a Progressive Web App (PWA) that serves as an all-in-one golf compani
 - **GPS**: Browser Geolocation API for GPS positioning.
 - **Real-time**: WebSocket or Server-Sent Events for live leaderboard updates and push notifications.
 - **Cost**: All external services and APIs must be free or have a sufficient free tier. No paid APIs or data sources.
-- **Authentication**: Email/password + Google and Apple social login. Invite links for guest access to tournaments.
+- **Authentication**: Email/password at launch. Google and Apple social login are deferred to the roadmap. Invite links for guest access to tournaments.
 - **License compliance**: ODbL attribution required for OpenStreetMap data usage.
 
 ## 8. Out of Scope

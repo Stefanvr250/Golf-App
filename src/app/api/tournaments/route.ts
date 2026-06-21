@@ -23,8 +23,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, courseId, format, numHoles, maxParticipants, date } = parsed.data;
-    const leagueId = (body as any).leagueId ?? null;
+    const { name, courseId, format, numHoles, maxParticipants, date, leagueId } = parsed.data;
 
     // Create tournament
     const { data: tournament, error: tErr } = await supabase
@@ -37,7 +36,7 @@ export async function POST(request: Request) {
         num_holes: numHoles,
         max_participants: maxParticipants,
         date,
-        league_id: leagueId,
+        league_id: leagueId ?? null,
         status: "upcoming",
       })
       .select("id, invite_code")
