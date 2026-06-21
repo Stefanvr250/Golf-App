@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { courseSearchOsmSchema } from "@/lib/validations/course";
+import { searchCoursesByName, searchCoursesNearby } from "@/lib/maps/overpass";
 
 export interface CourseSearchResult {
   osmId: number | null;
@@ -12,6 +13,17 @@ export interface CourseSearchResult {
   distanceKm: number | null;
   inDatabase: boolean;
   source: "osm" | "community";
+}
+
+function approximateDistanceKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const toRad = (v: number) => (v * Math.PI) / 180;
+  const earthRadiusKm = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 export async function GET(request: Request) {
@@ -40,6 +52,15 @@ export async function GET(request: Request) {
 
   try {
     const supabase = createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const results: CourseSearchResult[] = [];
 
     if (q) {
@@ -87,6 +108,40 @@ export async function GET(request: Request) {
         { error: "Provide either 'q' (name search) or 'lat'+'lng' (nearby search)" },
         { status: 400 }
       );
+    }
+
+    if (results.length === 0) {
+      if (q) {
+        const osmResults = await searchCoursesByName(q);
+        for (const c of osmResults) {
+          results.push({
+            osmId: c.osmId,
+            id: null,
+            name: c.name,
+            lat: c.lat,
+            lng: c.lng,
+            holes: c.holes,
+            distanceKm: null,
+            inDatabase: false,
+            source: "osm",
+          });
+        }
+      } else if (lat != null && lng != null) {
+        const osmResults = await searchCoursesNearby(lat, lng, radius ?? 25000);
+        for (const c of osmResults) {
+          results.push({
+            osmId: c.osmId,
+            id: null,
+            name: c.name,
+            lat: c.lat,
+            lng: c.lng,
+            holes: c.holes,
+            distanceKm: approximateDistanceKm(lat, lng, c.lat, c.lng),
+            inDatabase: false,
+            source: "osm",
+          });
+        }
+      }
     }
 
     return NextResponse.json({ results });

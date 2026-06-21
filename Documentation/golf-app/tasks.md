@@ -50,6 +50,7 @@ PRD references are to user stories (US#) and acceptance criteria (AC) from `prd.
 - [x] **Task 2.1** `[S→1.4]` Build login page at `src/app/(auth)/login/page.tsx` with email/password form using Supabase Auth. Redirect to dashboard on success.
   - **PRD**: US#8 (handicap requires auth), AC — Authentication
   - **Deliverable**: User can log in with email/password
+  - **Note**: Google/Apple OAuth portion is intentionally descoped and deferred to `future-roadmap.md`.
 
 - [x] **Task 2.2** `[S→1.4]` Build registration page at `src/app/(auth)/register/page.tsx` with email, password, display name, and TOS/privacy consent checkbox (required). Use Supabase `signUp()`.
   - **PRD**: POPIA — Consent at registration

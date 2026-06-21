@@ -39,7 +39,7 @@
 
 | Task | Effort | Dependencies | Acceptance Criteria |
 |------|--------|-------------|---------------------|
-| 2.1 Build login page with email/password and social OAuth buttons (Google, Apple) | Small | 1.4 | User can log in with all 3 methods |
+| 2.1 Build login page with email/password authentication (Google and Apple OAuth deferred to roadmap) | Small | 1.4 | User can log in with email/password |
 | 2.2 Build registration page with email/password, display name, TOS/privacy consent checkbox | Small | 1.4 | User can register, profile row created automatically |
 | 2.3 Create Supabase trigger: auto-create `profiles` row on `auth.users` insert | Small | 1.7 | Profile created on signup with default role='player' |
 | 2.4 Build user profile page showing display name, avatar, handicap, round count | Small | 2.1 | Profile displays correct data |
@@ -225,7 +225,7 @@ M1 (Setup) ───────────────────────
 | Milestone | Validation |
 |-----------|-----------|
 | **M1** | `npm run build` succeeds. Supabase tables created. PWA installable on mobile. |
-| **M2** | User can register, login (all 3 methods), view/edit profile. Unauthorized routes redirect. |
+| **M2** | User can register and login with email/password, view/edit profile. Unauthorized routes redirect. |
 | **M3** | Search finds courses near a SA golf course location. Course detail page shows holes. Map renders with GPS dot. |
 | **M4** | Full 18-hole round can be played and completed. All stats calculate correctly. |
 | **M5** | Handicap updates after round. History shows correct values. |

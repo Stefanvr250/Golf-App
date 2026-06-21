@@ -138,7 +138,7 @@ async function syncCreateRound(payload: {
  */
 async function syncCompleteRound(payload: { roundId: string }): Promise<boolean> {
   const res = await fetch(`/api/rounds/${payload.roundId}`, {
-    method: "PATCH",
+    method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ status: "completed" }),
   });
