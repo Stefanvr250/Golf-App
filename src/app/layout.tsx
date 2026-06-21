@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AppShell } from "@/components/layout/app-shell";
 import { Toaster } from "@/components/ui/toaster";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "GolfApp — Scoring, GPS & Tournaments",
@@ -42,6 +43,7 @@ export default function RootLayout({
       <body className="min-h-screen antialiased">
         <AppShell>{children}</AppShell>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
