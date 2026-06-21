@@ -55,6 +55,33 @@ Dedicated admin interface for the first admin account to complete before full la
 
 ---
 
+## Phase 1.5 — UX & Polish (Post-Deployment)
+
+Items identified during production testing and user feedback session (2025-06-21).
+
+### Play Page & Course Discovery
+- **Auto-request GPS on Play page entry** — On page load, request browser geolocation and immediately show nearby courses with configurable search radius (25 km / 50 km / 100 km / 200 km). Fallback to search box if GPS denied.
+- **Course detail satellite map** — Show a full satellite map on every course detail page with hole pin markers. Allow browsing holes on the map and seeing hole info overlays.
+- **Tap-to-measure on maps** — On any course/hole map, allow the user to tap any point and see the distance in meters/yards from their current GPS position. Useful for planning shots to hazards, lay-up spots, etc.
+
+### Scoring Flow
+- **Hole-by-hole "Quick Score" mode** — When starting a round, default to a simplified hole-by-hole view that starts at Hole 1. Show a compact scoring card (strokes, putts, GIR), then a big "Next Hole" button. Include a "View Full Scorecard" button at the top that takes you to the existing grid view.
+- **Casual round guest players** — When starting a standalone (non-tournament) round, allow the user to add friends by name even if they don't have an account. Scores are saved under a "guest player" concept so the user can track scores for their foursome.
+
+### Predictions
+- **Allow self-selection in predictions** — Remove the `otherParticipants` filter so a user can predict themselves as winner, best performer, etc.
+
+### Authentication
+- **Forgot password flow** — Add "Forgot password?" link to the login page. Trigger Supabase `resetPasswordForEmail` and build a password reset page at `/auth/reset-password`.
+
+### Admin
+- **Admin nav link** — Show an "Admin" nav item (desktop sidebar + mobile tab bar) only when `profiles.role = 'admin'`. Currently the admin pages exist but are unreachable without direct URL access.
+
+### Performance (Production)
+- **Investigate 3-5s page loads** — All pages feel sluggish on production. Profile bundle size, Supabase query latency, and Vercel cold-start impact. Consider edge caching for static course data and optimizing Supabase indexes.
+
+---
+
 ## Phase 2 — Enhanced Features
 
 ### Handicap
