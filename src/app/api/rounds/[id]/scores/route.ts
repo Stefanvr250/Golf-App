@@ -81,12 +81,13 @@ export async function POST(request: Request, { params }: Params) {
       .single();
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error("Score save failed:", error.message);
+      return NextResponse.json({ error: "Failed to save score" }, { status: 500 });
     }
 
     return NextResponse.json({ score }, { status: 200 });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Score save error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

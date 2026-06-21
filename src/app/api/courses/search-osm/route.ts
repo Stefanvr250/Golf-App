@@ -146,7 +146,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ results });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 502 });
+    console.error("Course search error:", err);
+    return NextResponse.json({ error: "Failed to search courses" }, { status: 502 });
   }
 }

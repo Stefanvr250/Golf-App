@@ -18,7 +18,8 @@ export async function DELETE() {
     const { error } = await serviceClient.auth.admin.deleteUser(user.id);
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error("Account deletion (auth) failed:", error.message);
+      return NextResponse.json({ error: "Failed to delete account" }, { status: 500 });
     }
 
     const { error: profileDeleteError } = await serviceClient
@@ -27,12 +28,13 @@ export async function DELETE() {
       .eq("id", user.id);
 
     if (profileDeleteError) {
-      return NextResponse.json({ error: profileDeleteError.message }, { status: 500 });
+      console.error("Account deletion (profile) failed:", profileDeleteError.message);
+      return NextResponse.json({ error: "Failed to delete account" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Account deletion error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

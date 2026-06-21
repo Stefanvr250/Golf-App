@@ -31,23 +31,28 @@ function getApiLimit(pathname: string): number {
   return DEFAULT_API_RATE_LIMIT;
 }
 
-function getClientIdentifier(request: NextRequest): string {
+function getClientIdentifier(request: NextRequest, userId?: string): string {
+  // Prefer authenticated user ID — cannot be spoofed
+  if (userId) return `uid:${userId}`;
+
   const forwardedFor = request.headers.get("x-forwarded-for");
   if (forwardedFor) {
-    return forwardedFor.split(",")[0].trim();
+    return `ip:${forwardedFor.split(",")[0].trim()}`;
   }
 
   const realIp = request.headers.get("x-real-ip");
-  if (realIp) return realIp;
+  if (realIp) return `ip:${realIp}`;
 
-  return request.headers.get("user-agent") ?? "unknown-client";
+  return "unknown-client";
 }
 
-function enforceApiRateLimit(request: NextRequest, pathname: string): NextResponse | null {
+function enforceApiRateLimit(request: NextRequest, pathname: string, userId?: string): NextResponse | null {
   const now = Date.now();
-  const identifier = getClientIdentifier(request);
+  const identifier = getClientIdentifier(request, userId);
   const limit = getApiLimit(pathname);
-  const key = `${identifier}:${pathname}`;
+  // Key by route prefix match, not exact path, to prevent per-URL bypass
+  const matchedPrefix = API_RATE_LIMIT_OVERRIDES.find((r) => pathname.startsWith(r.prefix))?.prefix ?? "/api";
+  const key = `${identifier}:${matchedPrefix}`;
   const current = rateLimitStore.get(key);
 
   if (!current || current.resetAt <= now) {
@@ -85,7 +90,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/api/")) {
-    const rateLimitResponse = enforceApiRateLimit(request, pathname);
+    const rateLimitResponse = enforceApiRateLimit(request, pathname, user?.id);
     if (rateLimitResponse) return rateLimitResponse;
 
     if (!user) {

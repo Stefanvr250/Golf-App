@@ -39,12 +39,13 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error("Round creation failed:", error.message);
+      return NextResponse.json({ error: "Failed to create round" }, { status: 500 });
     }
 
     return NextResponse.json({ roundId: round.id }, { status: 201 });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Round creation error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

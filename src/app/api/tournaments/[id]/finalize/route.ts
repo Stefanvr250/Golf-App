@@ -44,7 +44,8 @@ export async function POST(request: Request, { params }: Params) {
       .eq("id", tournamentId);
 
     if (updateErr) {
-      return NextResponse.json({ error: updateErr.message }, { status: 500 });
+      console.error("Tournament finalize failed:", updateErr.message);
+      return NextResponse.json({ error: "Failed to finalize tournament" }, { status: 500 });
     }
 
     // --- Prediction scoring ---
@@ -156,7 +157,7 @@ export async function POST(request: Request, { params }: Params) {
 
     return NextResponse.json({ status: "completed", tournamentId });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Tournament finalize error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

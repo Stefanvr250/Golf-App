@@ -43,7 +43,8 @@ export async function POST(request: Request) {
       .single();
 
     if (tErr || !tournament) {
-      return NextResponse.json({ error: tErr?.message ?? "Failed to create tournament" }, { status: 500 });
+      console.error("Tournament creation failed:", tErr?.message);
+      return NextResponse.json({ error: "Failed to create tournament" }, { status: 500 });
     }
 
     // Auto-join organizer as participant
@@ -61,8 +62,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ tournamentId: tournament.id, inviteCode: tournament.invite_code }, { status: 201 });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Tournament creation error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
@@ -107,7 +108,7 @@ export async function GET() {
       upcoming: (upcoming ?? []).map(normalizeCourse),
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Tournament list error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -36,7 +36,8 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error("League creation failed:", error.message);
+      return NextResponse.json({ error: "Failed to create league" }, { status: 500 });
     }
 
     // Auto-join manager as member
@@ -47,8 +48,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ leagueId: league.id }, { status: 201 });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("League creation error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
@@ -77,7 +78,7 @@ export async function GET() {
 
     return NextResponse.json({ leagues });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("League list error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
